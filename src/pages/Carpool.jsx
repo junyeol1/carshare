@@ -21,6 +21,7 @@ function Carpool() {
       (boardInfo) =>
         boardInfo.district === selectedOption.district && boardInfo.region === selectedOption.region
     );
+    console.log("검색",selectedOption.district, "시:", selectedOption.region);
     setCurrentBoards(filteredBoard);
   };
   const onClickLogo = () => {
@@ -35,7 +36,7 @@ function Carpool() {
         setCurrentBoards(data);
         setBoards(data);
       });
-  }, [currentBoards, boards]);
+  },);
 
   //검색 주소를 콘솔에 출력
   // console.log(toSearch);

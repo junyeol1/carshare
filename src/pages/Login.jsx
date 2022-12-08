@@ -1,26 +1,27 @@
-import { Link, useNavigate } from "react-router-dom";
-import styled from "styled-components"; 
-import { useState } from "react";
+import { Link, useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+import { useState } from 'react';
 
-import LoginInput from "../components/login/LoginInput";
+import LoginInput from '../components/login/LoginInput';
+import { client } from '../api/index';
 
 function Login() {
   const navigate = useNavigate();
   const LoginFormData = [
     {
-      placeholder: "아이디를 입력해주세요.",
-      name: "userId",
-      type: "text",
+      placeholder: '아이디를 입력해주세요.',
+      name: 'userId',
+      type: 'text',
     },
     {
-      placeholder: "비밀번호를 입력해주세요.",
-      name: "password",
-      type: "password",
+      placeholder: '비밀번호를 입력해주세요.',
+      name: 'password',
+      type: 'password',
     },
   ];
   const [values, setValues] = useState({
-    userId: "",
-    password: "",
+    userId: '',
+    password: '',
   });
   const [error, setError] = useState();
 
@@ -29,25 +30,41 @@ function Login() {
 
     setValues((prevState) => ({ ...prevState, [name]: value }));
   };
-
-  const handleSubmit = (event) => {
-    const isValidate = values.userId === "testId" && values.password === "testPw" ? true : false;
-    // const isValidate = axios ~ 사용하여 백엔드 APi 연결.
-    if (isValidate) {
-      // 로컬스토리지를 사용해서 로그인 후에 페이지를 닫았다가 켜도 로그인상태가 유지 됨.
-      window.localStorage.setItem("currentUserId", "user1");
-      navigate("/");
-    } else {
-      setError("ID 또는 PW가 올바르지 않습니다.");
-    }
+  // api 연결 전 로컬스토리지 임시 아이디 비번.
+  // const handleSubmit = (event) => {
+  //   const isValidate = values.userId === "testId" && values.password === "testPw" ? true : false;
+  //   if (isValidate) {
+  //     // 로컬스토리지를 사용해서 로그인 후에 페이지를 닫았다가 켜도 로그인상태가 유지 됨.
+  //     window.localStorage.setItem("currentUserId", "user1");
+  //     navigate("/");
+  //   } else {
+  //     setError("ID 또는 PW가 올바르지 않습니다.");
+  //   }
+  //   event.preventDefault();
+  // };
+  const handleSubmit = async (event) => {
     event.preventDefault();
+
+    try {
+      const { data } = await client.post('/login', values);
+
+      localStorage.setItem('user', JSON.stringify(data));
+      navigate('/');
+    } catch (err) {
+      setError('ID 또는 PW가 올바르지 않습니다.');
+    }
   };
+
   return (
     <LoginContainer>
       <LoginForm>
         {LoginFormData.map((data) => (
           // key={} 값이 없어서 콘솔 경고뜸
-          <LoginInput key={data.name} data={data} handleChange={(e) => handleChange(e)} />
+          <LoginInput
+            key={data.name}
+            data={data}
+            handleChange={(e) => handleChange(e)}
+          />
         ))}
         <ErrorText>{error}</ErrorText>
         <SubmitBtn onClick={handleSubmit} value={values.userId}>
@@ -90,7 +107,7 @@ const SubmitBtn = styled.button`
   width: 100%;
   text-transform: uppercase;
   outline: 0;
-  background: ${(props) => (props.value === "" ? "#BCBCBC" : "#FF9C2C")};
+  background: ${(props) => (props.value === '' ? '#BCBCBC' : '#FF9C2C')};
 
   border: 0;
   border-radius: 4px;
@@ -101,14 +118,13 @@ const SubmitBtn = styled.button`
   font-weight: 500;
   font-size: 17px;
   letter-spacing: 0.03em;
-  
 `;
 
-const LoginContainer = styled.div.attrs({ className: "SignUp" })`
+const LoginContainer = styled.div.attrs({ className: 'SignUp' })`
   display: flex;
   height: 640px;
-  background-color: #2D2D92;
-  font-family: "Pretended";
+  background-color: #2d2d92;
+  font-family: 'Pretended';
 `;
 
 const LoginForm = styled.div`

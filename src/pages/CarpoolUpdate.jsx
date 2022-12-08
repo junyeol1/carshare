@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import NavBar from "../components/navBar/navBar";
 import InputInfo from "../components/InputInfo";
-import SelectBox from "../components/selectBox";
+import SelectBoxTaxi from "../components/selectBoxTaxi";
 import { useEffect, useState } from "react";
 import { useBoardData } from "../store/boardStore";
 import { useNavigate, useLocation } from "react-router-dom";

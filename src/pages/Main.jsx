@@ -1,21 +1,30 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
-import NavBar from "../components/navBar/navBar";
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+import NavBar from '../components/navBar/navBar';
 
 export default function Main() {
   const navigate = useNavigate();
   function onClickBtn(e, btnTitle) {
     navigate(`/${btnTitle}`);
   }
-  useEffect(() => {
-    // 로컬스토리지
-    const currentUserId = window.localStorage.getItem("currentUserId");
+  // 로컬스토리지 키 값을 currentUserId 대신 user로 변경.
+  // useEffect(() => {
+  //   // 로컬스토리지
+  //   const currentUserId = window.localStorage.getItem("currentUserId");
 
-    if (!currentUserId) {
-      navigate("/login");
+  //   if (!currentUserId) {
+  //     navigate("/login");
+  //   }
+  // }, []);
+  useEffect(() => {
+    const rawData = localStorage.getItem('user');
+    const user = JSON.parse(rawData);
+
+    if (!user) {
+      navigate('/login');
     }
-  }, []);
+  }, [navigate]);
 
   return (
     <MainContainer>
@@ -25,9 +34,9 @@ export default function Main() {
         <ButtonContainer>
           <ImgText>CARPOOL</ImgText>
           <ImgText>TAXI</ImgText>
-          <CarPoolBtn onClick={(e) => onClickBtn(e, "carPool")} />
-          <TaxiBtn onClick={(e) => onClickBtn(e, "taxi")} />
-          <MyInfoBtn onClick={(e) => onClickBtn(e, "myInfo")} />
+          <CarPoolBtn onClick={(e) => onClickBtn(e, 'carPool')} />
+          <TaxiBtn onClick={(e) => onClickBtn(e, 'taxi')} />
+          <MyInfoBtn onClick={(e) => onClickBtn(e, 'myInfo')} />
         </ButtonContainer>
       </BodyContainer>
     </MainContainer>
@@ -37,7 +46,7 @@ const MyInfoBtn = styled.button`
   margin-top: 10px;
   background-size: 320px;
   width: 310px;
-  background-image: url("./assets/MyInfoLogo.png");
+  background-image: url('./assets/MyInfoLogo.png');
   height: 70px;
 `;
 const ImgText = styled.p`
@@ -48,12 +57,12 @@ const ImgText = styled.p`
   margin-bottom: 3px;
 `;
 const CarPoolBtn = styled.button`
-  background-image: url("./assets/carPoolLogo.png");
+  background-image: url('./assets/carPoolLogo.png');
   width: 149px;
   height: 138px;
 `;
 const TaxiBtn = styled.button`
-  background-image: url("./assets/TaxiLogo.png");
+  background-image: url('./assets/TaxiLogo.png');
   width: 149px;
   height: 138px;
 `;
